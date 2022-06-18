@@ -64,11 +64,11 @@ class ImageSelectView(discord.ui.View):
 
 async def generate_images(prompt: str) -> list[io.BytesIO]:
     async with aiohttp.ClientSession() as session:
-        async with session.post(config['DALLE_MINI_BACKEND_URL'], json={'prompt': prompt}) as response:
+        async with session.post(config['DALLE_MINI_BACKEND_URL'], json={'text': prompt, 'num_images': 6}) as response:
             if response.status == 200:
                 response_data = await response.json()
                 images = [io.BytesIO(base64.decodebytes(bytes(image, 'utf-8')))
-                          for image in response_data['images']]
+                          for image in response_data]
                 return images
             else:
                 return None
